@@ -8,6 +8,8 @@ get_article_data <- function(queries, limit=7500, min_year=2008, max_year=2018, 
   for (query in queries) {
     if (exists("eps")) {
       temp <- epmc_search(query = query, limit=limit)
+      temp <- dplyr::select(temp, one_of(colnames(eps)))
+      eps <- dplyr::select(eps, one_of(colnames(temp)))
       eps <- dplyr::union(eps, temp)
     } else {
     eps <- epmc_search(query = query, limit=limit)
@@ -30,6 +32,17 @@ get_article_data <- function(queries, limit=7500, min_year=2008, max_year=2018, 
   eps <- dplyr::filter(eps, !is.na(pmid) & !is.na(doi) & !is.na(authorString))
   message("Removed records with NA values for pmid, doi, and authors.")
   message(sprintf("%s records passed the filter.", length(rownames(eps))))
+  eps$journalIssn <- stringr::str_replace(eps$journalIssn, "x", "X")
+  eps$journalIssn <- stringr::str_replace_all(eps$journalIssn, "-", "")
+  print(eps)
   return(eps)
 }
 
+get_unique_issns <- function(issns){
+  issns_df <- as.data.frame(stringr::str_split(issns, "; ", simplify = TRUE, n=3))
+  primary_issns <- issns_df$V1
+  secondary_issns <- filter(issns_df, V2 != "")$V2
+  issns <- c(as.character(primary_issns), as.character(secondary_issns))
+  #issns <- unique(issns)
+  return(issns)
+}
