@@ -1,6 +1,8 @@
 library(tibble)
 library(dplyr)
 library(magrittr)
+library(BiocParallel, quietly = TRUE)
+register(SnowParam(2))
 
 # TODO: Equate column names to each other
 
@@ -21,12 +23,12 @@ get_journal_data <- function(data="incities") {
 }
 
 
-issn2title <- function(data="incities", issns) {
+issn2journal_data <- function(data="incities", issns) {
   if (any(class(data) != "tbl")) {
     data <- get_journal_data(data=data)
   }
   data <- dplyr::filter(data, if_else(
     (data$ISSN %in% stringr::str_split(issns, ";", simplify = TRUE)[,1]), TRUE, 
     if_else(data$ISSN %in% stringr::str_split(issns, ";", simplify = TRUE), TRUE, FALSE)))
-  return(data$Title)
+  return(data)
 }
