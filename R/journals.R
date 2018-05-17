@@ -11,24 +11,28 @@ get_journal_data <- function(data="incities") {
     journal_data = as_tibble(read.csv(file = "data/incities2016.csv", header = TRUE))
     journal_data$Title <- journal_data$Full.Journal.Title
     journal_data$Full.Journal.Title <- NULL
+    journal_data$ISSN <- stringr::str_replace(journal_data$ISSN, "-", "")
   } else if (data == "scimago") {
-    journal_data <- read.csv(file = "data/scimago2016.csv", header = TRUE)
+    journal_data <- as.tibble(read.csv(file = "data/scimago2016.csv", header = TRUE))
     journal_data$ISSN <- journal_data$Issn
     journal_data$Issn <- NULL
-    journal_data <- stringr::str_replace(journal_data$ISSN, "ISSN ", "") %>% 
-      stringr::str_replace(",", ";")
-    journal_data <- as_tibble(journal_data)
+    journal_data$ISSN <- stringr::str_replace(journal_data$ISSN, "ISSN ", "")
+    journal_data$ISSN <- stringr::str_replace(journal_data$ISSN, ",", ";")
+    issn_df <- as.data.frame(stringr::str_split(journal_data$ISSN, "; ", simplify = TRUE))
+    journal_data <- dplyr::mutate(journal_data, ISSN.1 = issn_df$V1, ISSN.2 = issn_df$V2)
   }
   return(journal_data)
 }
 
 
 issn2journal_data <- function(data="incities", issns) {
-  if (any(class(data) != "tbl")) {
+  if (!"tbl" %in% class(data)) {
     data <- get_journal_data(data=data)
   }
-  data <- dplyr::filter(data, if_else(
-    (data$ISSN %in% stringr::str_split(issns, ";", simplify = TRUE)[,1]), TRUE, 
-    if_else(data$ISSN %in% stringr::str_split(issns, ";", simplify = TRUE), TRUE, FALSE)))
+  if ("ISSN.1" %in% colnames(data)) {
+    data <- dplyr::filter(data, (ISSN.1 %in% issns) | (ISSN.2 %in% issns))
+    } else{
+      data <- dplyr::filter(data, ISSN %in% issns)
+    }
   return(data)
 }
