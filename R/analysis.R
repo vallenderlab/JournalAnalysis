@@ -1,7 +1,7 @@
 source("R/journals.R")
 source("R/articles.R")
 
-journal_data <- get_journal_data(data="scimago")
+journal_data <- get_journal_data(data = "scimago")
 
 
 q1 <- "microbiome AND (psychiatry OR brain OR neurons OR neuroscience OR rhesus OR macaque OR addiction) (NOT ecology)"
@@ -12,7 +12,7 @@ article_data <- get_article_data(queries = c(q1, q2), limit = 15000, min_citatio
 article_issns <- get_unique_issns(article_data$journalIssn)
 
 # Get journal data matching article ISSNs
-journal_data <- issn2journal_data(data=journal_data, issns = article_issns)
+journal_data <- issn2journal_data(data = journal_data, issns = article_issns)
 journal_issns <- get_unique_issns(journal_data$ISSN)
 
 # Get article data mathcing available ISSNs

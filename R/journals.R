@@ -8,7 +8,7 @@ register(SnowParam(2))
 
 get_journal_data <- function(data="incities") {
   if (data == "incities") {
-    journal_data = as_tibble(read.csv(file = "data/incities2016.csv", header = TRUE))
+    journal_data <- as_tibble(read.csv(file = "data/incities2016.csv", header = TRUE))
     journal_data$Title <- journal_data$Full.Journal.Title
     journal_data$Full.Journal.Title <- NULL
     journal_data$ISSN <- stringr::str_replace(journal_data$ISSN, "-", "")
@@ -27,12 +27,12 @@ get_journal_data <- function(data="incities") {
 
 issn2journal_data <- function(data="incities", issns) {
   if (!"tbl" %in% class(data)) {
-    data <- get_journal_data(data=data)
+    data <- get_journal_data(data = data)
   }
   if ("ISSN.1" %in% colnames(data)) {
     data <- dplyr::filter(data, (ISSN.1 %in% issns) | (ISSN.2 %in% issns))
-    } else{
-      data <- dplyr::filter(data, ISSN %in% issns)
-    }
+  } else {
+    data <- dplyr::filter(data, ISSN %in% issns)
+  }
   return(data)
 }
