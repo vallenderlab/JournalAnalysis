@@ -1,5 +1,5 @@
-source("R/journals.R")
-source("R/articles.R")
+source("scripts/journals.R")
+source("scripts/articles.R")
 
 journal_data <- get_journal_data(data = "scimago")
 
