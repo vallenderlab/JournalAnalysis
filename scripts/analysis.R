@@ -21,5 +21,5 @@ article_data <- issn2article_data(article_data, journal_issns)
 # Combine article data with journal data
 ja_data <- get_articles_with_journal_data(article_data, journal_data)
 
-write.csv(ja_data, "microbiome_articles.csv")
-write.csv(journal_data, "microbiome_journals.csv")
+write.csv(ja_data, "query_results/microbiome_articles.csv")
+write.csv(journal_data, "query_results/microbiome_journals.csv")

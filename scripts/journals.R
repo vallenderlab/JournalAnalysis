@@ -1,7 +1,7 @@
 library(tibble)
 library(dplyr)
 library(magrittr)
-library(BiocParallel, quietly = TRUE)
+library(BiocParallel)
 register(SnowParam(2))
 
 # TODO: Equate column names to each other
