@@ -36,7 +36,6 @@ get_article_data <- function(queries, limit=7500, min_year=2008, max_year=2018, 
   eps$journalIssn <- stringr::str_replace_all(eps$journalIssn, "-", "")
   issns_df <- as.data.frame(stringr::str_split(eps$journalIssn, "; ", simplify = TRUE, n = 3))
   eps <- dplyr::mutate(eps, ISSN.1 = issns_df$V1, ISSN.2 = issns_df$V2)
-  print(eps)
   return(eps)
 }
 
