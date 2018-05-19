@@ -1,14 +1,17 @@
 # journal-analysis
 
-A repository for exploring journals in which to publish a microbiome paper.
+A repository for exploring and identifying the best journals in which to publish a paper.
 
-## Important resources
+## Installation
 
-* [Scimago Journal and Country Rank](https://www.scimagojr.com/aboutus.php)
-* [InCities Journal Citation Reports]( http://jcr.incites.thomsonreuters.com/JCRJournalHomeAction.action?wsid=5Aa4jbtfC2lQdEGIwCT&Init=Yes&SrcApp=IC2LS&SID=H6-gdiAea4KogIEbyxx7iUr4obA2S2omDx2BTz-18x2dDOuJZ4XsZ6keA24DqhpckAx3Dx3Dw1c6x2Bx2BP7NHfVnpg6nSkZqAx3Dx3D-9vvmzcndpRgQCGPd1c2qPQx3Dx3D-wx2BJQh9GKVmtdJw3700KssQx3Dx3D)
-* [Europe PMC](https://europepmc.org/Help#whatserachingEPMC)
+This package is only available on GitHub.
+```r
+install.packages("devtools")
+library(devtools)
+install_github("vallenderlab/JournalAnalysis")
+```
 
-## How To Use These Scripts
+## Usage
 
   * Choose an Impact Factor dataset (`scimago` or `incities`).  
   * Create EUPMC style string queries in the _analysis.R_ script.  Multiple queries will produce article information that will be added together.  
@@ -17,10 +20,10 @@ A repository for exploring journals in which to publish a microbiome paper.
   
 ### Example
 
-Below is an example. You can also try the example in [`example.R`](example.R). It requires that you create a `results` folder or you can point the results to another folder..
+Below is a simple example. You can also view our example vignette.
 
 ```R
-> source("global.R") # All scripts are sourced in global.R
+> library(JournalAnalysis)
 > pub_data <- get_publication_data(journal_source = "scimago", queries = c(query1, query2), limit = 1000, min_citations = 20)
 14588 records found, returning 1000
 (-) [=================================================] 100%
@@ -102,3 +105,9 @@ There were 30 warnings (use warnings() to see them)
 #   Cites...Doc...2years. <dbl>, Ref....Doc. <dbl>, Country <fct>, Categories <fct>, ISSN <chr>,
 #   ISSN.2.y <fct>, ISSN.2 <fct>, ISSN.1.y <fct>
 ```
+
+## Important resources
+
+* [Scimago Journal and Country Rank](https://www.scimagojr.com/aboutus.php)
+* [InCities Journal Citation Reports]( http://jcr.incites.thomsonreuters.com/JCRJournalHomeAction.action?wsid=5Aa4jbtfC2lQdEGIwCT&Init=Yes&SrcApp=IC2LS&SID=H6-gdiAea4KogIEbyxx7iUr4obA2S2omDx2BTz-18x2dDOuJZ4XsZ6keA24DqhpckAx3Dx3Dw1c6x2Bx2BP7NHfVnpg6nSkZqAx3Dx3D-9vvmzcndpRgQCGPd1c2qPQx3Dx3D-wx2BJQh9GKVmtdJw3700KssQx3Dx3D)
+* [Europe PMC](https://europepmc.org/Help#whatserachingEPMC)
