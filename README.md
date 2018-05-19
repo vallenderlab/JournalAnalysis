@@ -1,4 +1,4 @@
-# journal-analysis
+# JournalAnalysis
 
 A repository for exploring and identifying the best journals in which to publish a paper.
 
