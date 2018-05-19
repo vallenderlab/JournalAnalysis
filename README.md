@@ -1,5 +1,6 @@
 # journal-analysis
-A repository for exploring journals that we would like to publish under.
+
+A repository for exploring journals in which to publish a microbiome paper.
 
 ## Important resources
 
@@ -7,20 +8,20 @@ A repository for exploring journals that we would like to publish under.
 * [InCities Journal Citation Reports]( http://jcr.incites.thomsonreuters.com/JCRJournalHomeAction.action?wsid=5Aa4jbtfC2lQdEGIwCT&Init=Yes&SrcApp=IC2LS&SID=H6-gdiAea4KogIEbyxx7iUr4obA2S2omDx2BTz-18x2dDOuJZ4XsZ6keA24DqhpckAx3Dx3Dw1c6x2Bx2BP7NHfVnpg6nSkZqAx3Dx3D-9vvmzcndpRgQCGPd1c2qPQx3Dx3D-wx2BJQh9GKVmtdJw3700KssQx3Dx3D)
 * [Europe PMC](https://europepmc.org/Help#whatserachingEPMC)
 
-## Tutorial
+## How To Use These Scripts
 
-  * Choose an Impact Factor dataset (scimago or incities).  
+  * Choose an Impact Factor dataset (`scimago` or `incities`).  
   * Create EUPMC style string queries in the _analysis.R_ script.  Multiple queries will produce article information that will be added together.  
   * Adjust the limit in order to get all of the data you want or to test out your query.  
   * Adjust the filtering parameters, and change the names of the files that will be produced.
   
-## Example Workflow
+### Example
+
+Below is an example. You can also try the example in [`example.R`](example.R). It requires that you create a `results` folder or you can point the results to another folder..
 
 ```R
-> source("R/analysis.R")
-> q1 <- "microbiome AND (psychiatry OR brain OR neurons OR neuroscience OR rhesus OR macaque OR addiction) (NOT ecology)"
-> q2 <- "microbiome AND environmental stress AND (rhesus OR macaque OR brain) (NOT ecology)"
-> x <- get_publication_data(journal_source = "scimago", queries = c(q1, q2), limit = 1000, min_citations = 20)
+> source("global.R") # All scripts are sourced in global.R
+> pub_data <- get_publication_data(journal_source = "scimago", queries = c(query1, query2), limit = 1000, min_citations = 20)
 14588 records found, returning 1000
 (-) [=================================================] 100%
 4005 records found, returning 1000
@@ -34,7 +35,7 @@ There were 30 warnings (use warnings() to see them)
 >
 >
 >
-> x$journals
+> pub_data$journals
 
 # A tibble: 22 x 18
     Rank Title          Type     SJR SJR.Best.Quarti~ H.index Total.Docs...20~ Total.Docs...3ye~ Total.Refs.
@@ -55,7 +56,7 @@ There were 30 warnings (use warnings() to see them)
 >
 >
 >
-> x$articles
+> pub_data$articles
 
 # A tibble: 30 x 29
    id     source pmid  doi   title authorString journalTitle pubYear journalIssn pubType isOpenAccess inEPMC
@@ -77,7 +78,7 @@ There were 30 warnings (use warnings() to see them)
 >
 >
 >
-> x$combined
+> pub_data$combined
 
 # A tibble: 30 x 48
    id     source pmid  doi   title authorString journalTitle pubYear journalIssn pubType isOpenAccess inEPMC
