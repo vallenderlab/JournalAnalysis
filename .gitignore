@@ -28,6 +28,13 @@ vignettes/*.pdf
 /*_cache/
 /cache/
 
+# Don't keep results
+results/*.png
+results/*.csv
+results/*.xlsx
+results/*.tiff
+results/*.pdf
+
 # Temporary files created by R markdown
 *.utf8.md
 *.knit.md
