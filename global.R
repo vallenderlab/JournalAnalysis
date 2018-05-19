@@ -6,7 +6,8 @@ required_cran_packages <- c(
   "stringr",
   "readxl",
   "ggplot2",
-  "ggthemes"
+  "ggthemes",
+  "PubMedWordcloud"
 )
 required_bioconductor_packages <- c(
   "BiocParallel"
@@ -39,3 +40,15 @@ remove(required_github_packages)
 remove(bioconductor_packages_to_install)
 remove(cran_packages_to_install)
 remove(github_packages_to_install)
+
+# Load all functions
+source("scripts/journals.R")
+source("scripts/articles.R")
+source("scripts/combined.R")
+source("scripts/helpers.R")
+
+
+# Provide sample queries
+query1 <- "microbiome AND (psychiatry OR brain OR neurons OR neuroscience OR rhesus OR macaque OR addiction) (NOT ecology)"
+query2 <- "microbiome AND environmental stress AND (rhesus OR macaque OR brain) (NOT ecology)"
+query3 <- "microbiome AND (psychiatry OR psychology OR neuroscience) AND (rhesus OR macaque or human or stress or monkey) AND (NOT ecology)"
