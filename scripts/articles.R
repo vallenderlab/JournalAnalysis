@@ -28,7 +28,7 @@ get_article_data <- function(queries, limit=7500, min_year=2008, max_year=2018, 
     eps <- dplyr::filter(eps, citedByCount > min_citations)
     message(sprintf("Removed records with less than %s citations.", min_citations))
   }
-  # Remove pmid, doi and authors iwth NA values
+  # Remove pmid, doi and authors with NA values
   eps <- dplyr::filter(eps, !is.na(pmid) & !is.na(doi) & !is.na(authorString))
   message("Removed records with NA values for pmid, doi, and authors.")
   message(sprintf("%s records passed the filter.", length(rownames(eps))))
