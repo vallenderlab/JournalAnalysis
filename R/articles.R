@@ -1,9 +1,16 @@
-library(europepmc)
-library(dplyr)
-library(BiocParallel, quietly = TRUE)
-register(SnowParam(2))
-
+#' @title Get Article Data
+#'
+#' @description This function retrieves article data from europe pmc.
+#'
+#' @param queries Input a Europe PMC query
+#' @param limit Minimum number of articles to retrieve
+#' @param min_year Minimum publication year
+#' @param max_year Maximum publication year
+#' @param min_citations Minimum number of citations per article
+#' @return A tibble of the article data
+#' @export
 get_article_data <- function(queries, limit=7500, min_year=2008, max_year=2018, min_citations=5) {
+  BiocParallel::SnowParam(2)
   # Cycle through multiple queries and create a union of unique journal articles
   for (query in queries) {
     if (exists("eps")) {
@@ -28,7 +35,7 @@ get_article_data <- function(queries, limit=7500, min_year=2008, max_year=2018, 
     eps <- dplyr::filter(eps, citedByCount > min_citations)
     message(sprintf("Removed records with less than %s citations.", min_citations))
   }
-  # Remove pmid, doi and authors iwth NA values
+  # Remove pmid, doi and authors with NA values
   eps <- dplyr::filter(eps, !is.na(pmid) & !is.na(doi) & !is.na(authorString))
   message("Removed records with NA values for pmid, doi, and authors.")
   message(sprintf("%s records passed the filter.", length(rownames(eps))))
@@ -39,6 +46,7 @@ get_article_data <- function(queries, limit=7500, min_year=2008, max_year=2018, 
   return(eps)
 }
 
+#' @export
 get_unique_issns <- function(issns) {
   issns_df <- as.data.frame(stringr::str_split(issns, "; ", simplify = TRUE, n = 3))
   primary_issns <- issns_df$V1
@@ -48,12 +56,22 @@ get_unique_issns <- function(issns) {
   return(issns)
 }
 
-issn2article_data <- function(data, issns) {
+#' @title ISSN to Article Data
+#'
+#' @description This function filters article data by ISSN.
+#'
+#' @param data The data tibble of the articles
+#' @param issns The issns from the articles
+#' @return A tibble of the articles filtered by ISSNs
+#' @export
+issn_to_article_data <- function(data, issns) {
   data <- dplyr::filter(data, (ISSN.1 %in% issns) | (ISSN.2 %in% issns))
   return(data)
 }
 
+#' @export
 get_articles_with_journal_data <- function(article_data, journal_data) {
+  BiocParallel::SnowParam(2)
   new_df <- NULL
   for (i in 1:length(article_data$id)) {
     I1 <- as.character(article_data$ISSN.1[i])

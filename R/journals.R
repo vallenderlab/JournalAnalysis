@@ -1,19 +1,19 @@
-library(tibble)
-library(dplyr)
-library(magrittr)
-library(BiocParallel, quietly = TRUE)
-register(SnowParam(2))
-
 # TODO: Equate column names to each other
-
+#' @title Get Journal Data
+#'
+#' @description This function retrieves journal data from an existing data file.
+#'
+#' @param data A data source included in the package's data folder. Can be scimago or incities.
+#' @return A tibble of the journal data.
+#' @export
 get_journal_data <- function(data="incities") {
   if (data == "incities") {
-    journal_data <- as_tibble(read.csv(file = "data/incities2016.csv", header = TRUE))
+    journal_data <- as.tibble(JournalAnalysis::incities2016)
     journal_data$Title <- journal_data$Full.Journal.Title
     journal_data$Full.Journal.Title <- NULL
     journal_data$ISSN <- stringr::str_replace(journal_data$ISSN, "-", "")
   } else if (data == "scimago") {
-    journal_data <- as.tibble(read.csv(file = "data/scimago2016.csv", header = TRUE))
+    journal_data <- as.tibble(JournalAnalysis::scimago2016)
     journal_data$ISSN <- journal_data$Issn
     journal_data$Issn <- NULL
     journal_data$ISSN <- stringr::str_replace(journal_data$ISSN, "ISSN ", "")
@@ -24,8 +24,15 @@ get_journal_data <- function(data="incities") {
   return(journal_data)
 }
 
-
-issn2journal_data <- function(data="incities", issns) {
+#' @title ISSN to Journal Data
+#'
+#' @description This function retrieves journal data from an existing data file.
+#'
+#' @param data The data source of the journal
+#' @param issns The issns from the journal source
+#' @return A tibble of the data filtered by ISSN
+#' @export
+issn_to_journal_data <- function(data, issns) {
   if (!"tbl" %in% class(data)) {
     data <- get_journal_data(data = data)
   }
