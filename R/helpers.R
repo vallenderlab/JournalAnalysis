@@ -6,8 +6,8 @@
 #' @param plot_name Path to the output word cloud
 #' @export
 get_word_cloud <- function(pubmed_ids, plot_name) {
-  abstracts = PubMedWordcloud::getAbstracts(pubmed_ids)
-  cleanAbs = PubMedWordcloud::cleanAbstracts(abstracts)
+  abstracts <- PubMedWordcloud::getAbstracts(pubmed_ids)
+  cleanAbs <- PubMedWordcloud::cleanAbstracts(abstracts)
   png(filename = plot_name, units = "in", width = 6, height = 6, res = 300)
   PubMedWordcloud::plotWordCloud(cleanAbs, rot.per = 0, min.freq = 5)
   dev.off()
@@ -21,7 +21,7 @@ get_word_cloud <- function(pubmed_ids, plot_name) {
 #' @param filename Name or path of output file without .csv extension
 #' @export
 save_as_csv <- function(data, filename) {
-  write.csv(data, file = paste0(filename,".csv"), row.names = FALSE)
+  write.csv(data, file = paste0(filename, ".csv"), row.names = FALSE)
 }
 
 #' @title Install JournalAnalysis Packages
@@ -48,7 +48,7 @@ install_journalanalysis_packages <- function() {
   cran_packages_to_install <- required_cran_packages[!(required_cran_packages %in% installed.packages()[, 1])]
   bioconductor_packages_to_install <- required_bioconductor_packages[!(required_bioconductor_packages %in% installed.packages()[, 1])]
   github_packages_to_install <- required_github_packages[!(gsub(".*/", "", required_github_packages) %in% installed.packages()[, 1])]
-  
+
   # Install packages from lists.
   if (length(cran_packages_to_install) > 0) {
     install.packages(cran_packages_to_install, repos = "https://cran.rstudio.com")
@@ -60,7 +60,7 @@ install_journalanalysis_packages <- function() {
   if (length(github_packages_to_install) > 0) {
     devtools::install_github(github_packages_to_install)
   }
-  
+
   # Remove unnecessary environment variables.
   remove(required_cran_packages)
   remove(required_bioconductor_packages)
