@@ -75,7 +75,16 @@ issn_to_article_data <- function(data, issns) {
   return(data)
 }
 
-#' @export
+#' @title Get Articles With Journal Data
+#'
+#' @description FUNCTION_DESCRIPTION
+#'
+#' @param article_data DESCRIPTION.
+#' @param journal_data DESCRIPTION.
+#'
+#' @return RETURN_DESCRIPTION
+#' @examples
+#' # ADD_EXAMPLES_HERE
 get_articles_with_journal_data <- function(article_data, journal_data) {
   BiocParallel::SnowParam(2)
   new_df <- NULL
