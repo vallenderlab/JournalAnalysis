@@ -1,6 +1,6 @@
 Package: JournalAnalysis
 Title: Explore and Identify Journals to Publish in.
-Version: 0.0.0.9000
+Version: 0.0.1
 Authors@R: c(
     person("Robert", "Gilmore", email = "rgilmore@umc.edu", role = "cre"),
     person("Shaurita", "Hutchins", email = "shutchins2@umc.edu", role = "aut"))
@@ -24,4 +24,4 @@ Imports:
 Suggests: knitr,
     rmarkdown
 VignetteBuilder: knitr
-RoxygenNote: 6.0.1
+RoxygenNote: 6.1.0
