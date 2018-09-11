@@ -4,8 +4,8 @@
 \alias{get_publication_data}
 \title{Get Publication Data}
 \usage{
-get_publication_data(journal_source, queries, limit = 7500, min_year = 2008,
-  max_year = 2018, min_citations = 5)
+get_publication_data(journal_source, queries, limit = 7500,
+  min_year = 2008, max_year = 2018, min_citations = 5)
 }
 \arguments{
 \item{journal_source}{The journal to search}

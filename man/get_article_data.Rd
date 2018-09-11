@@ -4,8 +4,8 @@
 \alias{get_article_data}
 \title{Get Article Data}
 \usage{
-get_article_data(queries, limit = 7500, min_year = 2008, max_year = 2018,
-  min_citations = 5)
+get_article_data(queries, limit = 7500, min_year = 2008,
+  max_year = 2018, min_citations = 5)
 }
 \arguments{
 \item{queries}{Input a Europe PMC query}

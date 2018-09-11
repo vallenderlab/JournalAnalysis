@@ -8,12 +8,12 @@
 #' @export
 get_journal_data <- function(data="incities") {
   if (data == "incities") {
-    journal_data <- as.tibble(JournalAnalysis::incities2016)
+    journal_data <- tibble::as.tibble(JournalAnalysis::incities2016)
     journal_data$Title <- journal_data$Full.Journal.Title
     journal_data$Full.Journal.Title <- NULL
     journal_data$ISSN <- stringr::str_replace(journal_data$ISSN, "-", "")
   } else if (data == "scimago") {
-    journal_data <- as.tibble(JournalAnalysis::scimago2016)
+    journal_data <- tibble::as.tibble(JournalAnalysis::scimago2016)
     journal_data$ISSN <- journal_data$Issn
     journal_data$Issn <- NULL
     journal_data$ISSN <- stringr::str_replace(journal_data$ISSN, "ISSN ", "")

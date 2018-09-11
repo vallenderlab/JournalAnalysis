@@ -1,6 +1,6 @@
 ---
-title: "Example Workflow"
-author: "Shaurita Hutchins"
+title: "JournalAnalysis Vignette"
+author: "Written by Shaurita Hutchins"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
@@ -16,60 +16,63 @@ knitr::opts_chunk$set(
 )
 ```
 
-## Getting Started
+## Packages to Load
 
 First, you need to load the `JournalAnalysis` package in order to load variables and functions. 
 
-```{r}
+```{r warning=FALSE, message=FALSE}
 library(JournalAnalysis)
+library(dplyr)
 ```
-### Decide on a query and generate pubmed data
+## Decide on a query and generate pubmed data
 
 Since we are interested in the microbiome in the context of psychiatry, our query is as such.
 
-```{r}
+```{r warning=FALSE}
 query3 <- "microbiome AND (psychiatry OR psychology OR neuroscience) AND (rhesus OR macaque or human or stress or monkey) AND (NOT ecology)"
 pub_data <- get_publication_data(journal_source = "scimago", queries = query3, limit = 30000, min_citations = 5)
 ```
 
 The `pub_data` objects includes `$articles`, `$journals`, and `$combined` data.
 
-#### View the resulting pubmed ids
-```{r}
+### View the resulting pubmed ids
+```{r warning=FALSE}
 # View the resulting pubmed ids
 pmids <- pub_data$articles$pmid
 pmids
 ```
-#### Retrieve abstracts from pmids and create a wordcloud from the pubmed abstracts
+### Retrieve abstracts from pmids and create a wordcloud from the pubmed abstracts
 
-```{r}
+```{r warning=FALSE}
 get_word_cloud(pubmed_ids = pmids, plot_name = "microbiome_psych_wordcloud.png")
+
+knitr::include_graphics('./microbiome_psych_wordcloud.png')
 ```
 
-### Accessing and analyzing journal data
+## Accessing and analyzing journal data
 
 View unique journals based on the articles retrieved with the below command.
 
-```{r}
+```{r warning=FALSE}
 pub_data$journals
 ```
 
 Now, you can do some further analysis of journals based on `SJR`, which is.
 
-```{r}
+```{r warning=FALSE}
 # Decide on categorical words to keep
 cats <- "Multidisciplinary|Neuroscience|Psychology|Psychiatry"
 ```
 
 Select "best" journals based on median or any other statistical method. It may be valuable to do some clustering although the journals are ranked into quartiles. We chose the median SJR to look at any journals above the median and qualify them as the upper tier.
 
-```{r}
+```{r warning=FALSE}
 # Only keep journals above the median that are journals and include the categories above.
 best_journals <- filter(pub_data$journals, SJR >= median(pub_data$journals$SJR) & grepl(cats, Categories) & Type == "journal")
 ```
 
 After filtering the journal data, you can now select specific columns to view and save your tibble as a csv file.
-```{r}
+```{r warning=FALSE}
 # Decide on columns to keep
 best_journals <- best_journals %>% select(Title, Rank, Type, SJR, Country, Categories)
 

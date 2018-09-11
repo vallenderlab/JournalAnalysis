@@ -14,12 +14,12 @@ get_article_data <- function(queries, limit=7500, min_year=2008, max_year=2018, 
   # Cycle through multiple queries and create a union of unique journal articles
   for (query in queries) {
     if (exists("eps")) {
-      temp <- epmc_search(query = query, limit = limit)
+      temp <- europepmc::epmc_search(query = query, limit = limit)
       temp <- dplyr::select(temp, one_of(colnames(eps)))
       eps <- dplyr::select(eps, one_of(colnames(temp)))
       eps <- dplyr::union(eps, temp)
     } else {
-      eps <- epmc_search(query = query, limit = limit)
+      eps <- europepmc::epmc_search(query = query, limit = limit)
     }
   }
   # Filter by min/max year and min citation
@@ -46,11 +46,17 @@ get_article_data <- function(queries, limit=7500, min_year=2008, max_year=2018, 
   return(eps)
 }
 
+#' @title Get Unique ISSNs
+#'
+#' @description This function filters ISSNs.
+#'
+#' @param issns The issns from the articles
+#' @return A tibble of filtered issns
 #' @export
 get_unique_issns <- function(issns) {
   issns_df <- as.data.frame(stringr::str_split(issns, "; ", simplify = TRUE, n = 3))
   primary_issns <- issns_df$V1
-  secondary_issns <- filter(issns_df, V2 != "")$V2
+  secondary_issns <- dplyr::filter(issns_df, V2 != "")
   issns <- c(as.character(primary_issns), as.character(secondary_issns))
   # issns <- unique(issns)
   return(issns)
@@ -69,7 +75,16 @@ issn_to_article_data <- function(data, issns) {
   return(data)
 }
 
-#' @export
+#' @title Get Articles With Journal Data
+#'
+#' @description FUNCTION_DESCRIPTION
+#'
+#' @param article_data DESCRIPTION.
+#' @param journal_data DESCRIPTION.
+#'
+#' @return RETURN_DESCRIPTION
+#' @examples
+#' # ADD_EXAMPLES_HERE
 get_articles_with_journal_data <- function(article_data, journal_data) {
   BiocParallel::SnowParam(2)
   new_df <- NULL
