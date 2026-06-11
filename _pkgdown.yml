@@ -1,3 +1,62 @@
+url: https://vallenderlab.github.io/journalanalysis
+
+development:
+  mode: unreleased
+
+navbar:
+  structure:
+    left: [intro, articles, reference]
+    right: [search, changelog, github]
+  components:
+    changelog:
+      text: Changelog
+      href: news/index.html
+
+reference:
+  - title: Workflow
+    contents: get_publication_data
+
+  - title: Europe PMC articles
+    contents:
+      - get_article_data
+      - get_unique_issns
+      - issn_to_article_data
+
+  - title: Journal metrics
+    contents:
+      - get_journal_data
+      - issn_to_journal_data
+
+  - title: InCites (JCR) data
+    contents:
+      - jcr2023_wos
+      - scimagojr2025
+
+  - title: Output and setup
+    contents:
+      - save_as_csv
+      - get_word_cloud
+      - install_journalanalysis_packages
+
+articles:
+  - title: Tutorials
+    contents: example
+
+home:
+  links:
+    - text: Scimago Journal & Country Rank
+      href: https://www.scimagojr.com/aboutus.php
+    - text: Europe PMC search help
+      href: https://europepmc.org/advancesearch
+    - text: Report an issue
+      href: https://github.com/vallenderlab/JournalAnalysis/issues
+
 template:
-  params:
-    bootswatch: cosmo
+  bootstrap: 5
+  bootswatch: yeti
+
+authors:
+  Robert Gilmore:
+    href: https://github.com/grabear
+  Shaurita Hutchins:
+    href: https://www.shauritahutchins.com
