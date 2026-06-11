@@ -4,11 +4,19 @@
 \alias{get_publication_data}
 \title{Get Publication Data}
 \usage{
-get_publication_data(journal_source, queries, limit = 7500,
-  min_year = 2008, max_year = 2018, min_citations = 5)
+get_publication_data(
+  journal_source,
+  queries,
+  limit = 7500,
+  min_year = NULL,
+  max_year = NULL,
+  min_citations = 5,
+  n_cores = default_worker_count()
+)
 }
 \arguments{
-\item{journal_source}{The journal to search}
+\item{journal_source}{Journal metrics source: `incities` (InCites / JCR) or
+`scimago`. Aliases `incites`, `jcr`, and `scimagojr` are also accepted.}
 
 \item{queries}{Use one or multiple queries}
 
@@ -19,6 +27,8 @@ get_publication_data(journal_source, queries, limit = 7500,
 \item{max_year}{Maximum year to search}
 
 \item{min_citations}{Minimum number of citations in a journal}
+
+\item{n_cores}{Number of cores to use across multiple queries.}
 }
 \value{
 A list of data objects including journals, articles, and combined data.

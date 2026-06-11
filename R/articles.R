@@ -7,43 +7,89 @@
 #' @param min_year Minimum publication year
 #' @param max_year Maximum publication year
 #' @param min_citations Minimum number of citations per article
+#' @param n_cores Number of cores to use across multiple queries.
 #' @return A tibble of the article data
 #' @export
-get_article_data <- function(queries, limit=7500, min_year=2008, max_year=2018, min_citations=5) {
-  BiocParallel::SnowParam(2)
+get_article_data <- function(queries, limit=7500, min_year=NULL, max_year=NULL,
+                             min_citations=5, n_cores=default_worker_count()) {
+  if (!is.character(queries) || length(queries) == 0 || anyNA(queries)) {
+    stop("`queries` must be a non-empty character vector.", call. = FALSE)
+  }
+
+  if (!is.numeric(limit) || length(limit) != 1 || is.na(limit) || limit <= 0) {
+    stop("`limit` must be a single positive numeric value.", call. = FALSE)
+  }
+
+  validate_year_bounds(min_year = min_year, max_year = max_year)
+
+  if (!is.null(min_citations) &&
+      (!is.numeric(min_citations) || length(min_citations) != 1 || is.na(min_citations))) {
+    stop("`min_citations` must be NULL or a single numeric value.", call. = FALSE)
+  }
+
+  if (!is.numeric(n_cores) || length(n_cores) != 1 || is.na(n_cores) || n_cores < 1) {
+    stop("`n_cores` must be a single positive numeric value.", call. = FALSE)
+  }
+
+  limit <- as.integer(limit)
+  n_cores <- as.integer(n_cores)
+
+  # Query-level parallelism helps when the user passes multiple search strings.
+  if (length(queries) > 1 && n_cores > 1 && .Platform$OS.type != "windows") {
+    search_results <- parallel::mclapply(
+      queries,
+      function(query) europepmc::epmc_search(query = query, limit = limit),
+      mc.cores = min(n_cores, length(queries))
+    )
+  } else {
+    search_results <- lapply(
+      queries,
+      function(query) europepmc::epmc_search(query = query, limit = limit)
+    )
+  }
+
   # Cycle through multiple queries and create a union of unique journal articles
-  for (query in queries) {
-    if (exists("eps")) {
-      temp <- europepmc::epmc_search(query = query, limit = limit)
-      temp <- dplyr::select(temp, one_of(colnames(eps)))
-      eps <- dplyr::select(eps, one_of(colnames(temp)))
-      eps <- dplyr::union(eps, temp)
+  eps <- NULL
+  for (temp in search_results) {
+    if (is.null(eps)) {
+      eps <- temp
     } else {
-      eps <- europepmc::epmc_search(query = query, limit = limit)
+      temp <- dplyr::select(temp, dplyr::any_of(colnames(eps)))
+      eps <- dplyr::select(eps, dplyr::any_of(colnames(temp)))
+      eps <- dplyr::union(eps, temp)
     }
   }
+
+  eps <- dplyr::mutate(
+    eps,
+    pubYear = suppressWarnings(as.integer(pubYear)),
+    citedByCount = suppressWarnings(as.numeric(citedByCount))
+  )
+
   # Filter by min/max year and min citation
   if (!is.null(min_year)) {
-    eps <- dplyr::filter(eps, pubYear > min_year)
+    eps <- dplyr::filter(eps, !is.na(pubYear) & pubYear >= min_year)
+    message(sprintf("Removed records published before %s.", min_year))
   }
-  message(sprintf("Removed records published before %s.", min_year))
   if (!is.null(max_year)) {
-    eps <- dplyr::filter(eps, pubYear < max_year)
+    eps <- dplyr::filter(eps, !is.na(pubYear) & pubYear <= max_year)
     message(sprintf("Removed records published after %s.", max_year))
   }
   if (!is.null(min_citations)) {
-    eps <- dplyr::filter(eps, citedByCount > min_citations)
+    eps <- dplyr::filter(eps, !is.na(citedByCount) & citedByCount >= min_citations)
     message(sprintf("Removed records with less than %s citations.", min_citations))
   }
+
   # Remove pmid, doi and authors with NA values
   eps <- dplyr::filter(eps, !is.na(pmid) & !is.na(doi) & !is.na(authorString))
   message("Removed records with NA values for pmid, doi, and authors.")
-  message(sprintf("%s records passed the filter.", length(rownames(eps))))
-  eps$journalIssn <- stringr::str_replace(eps$journalIssn, "x", "X")
-  eps$journalIssn <- stringr::str_replace_all(eps$journalIssn, "-", "")
-  issns_df <- as.data.frame(stringr::str_split(eps$journalIssn, "; ", simplify = TRUE, n = 3))
-  eps <- dplyr::mutate(eps, ISSN.1 = issns_df$V1, ISSN.2 = issns_df$V2)
-  return(eps)
+  message(sprintf("%s records passed the filter.", nrow(eps)))
+
+  issn_components <- split_normalized_issns(eps$journalIssn)
+  eps <- dplyr::mutate(eps, journalIssn = normalize_issn_values(journalIssn))
+  eps <- dplyr::bind_cols(eps, issn_components)
+
+  eps
 }
 
 #' @title Get Unique ISSNs
@@ -54,12 +100,7 @@ get_article_data <- function(queries, limit=7500, min_year=2008, max_year=2018, 
 #' @return A tibble of filtered issns
 #' @export
 get_unique_issns <- function(issns) {
-  issns_df <- as.data.frame(stringr::str_split(issns, "; ", simplify = TRUE, n = 3))
-  primary_issns <- issns_df$V1
-  secondary_issns <- dplyr::filter(issns_df, V2 != "")
-  issns <- c(as.character(primary_issns), as.character(secondary_issns))
-  # issns <- unique(issns)
-  return(issns)
+  collect_unique_issns(issns)
 }
 
 #' @title ISSN to Article Data
@@ -71,8 +112,9 @@ get_unique_issns <- function(issns) {
 #' @return A tibble of the articles filtered by ISSNs
 #' @export
 issn_to_article_data <- function(data, issns) {
-  data <- dplyr::filter(data, (ISSN.1 %in% issns) | (ISSN.2 %in% issns))
-  return(data)
+  normalized_issns <- collect_unique_issns(issns)
+
+  dplyr::filter(data, (ISSN.1 %in% normalized_issns) | (ISSN.2 %in% normalized_issns))
 }
 
 #' @title Get Articles With Journal Data
@@ -85,34 +127,56 @@ issn_to_article_data <- function(data, issns) {
 #' @return RETURN_DESCRIPTION
 #' @examples
 #' # ADD_EXAMPLES_HERE
+#' @keywords internal
 get_articles_with_journal_data <- function(article_data, journal_data) {
-  BiocParallel::SnowParam(2)
-  new_df <- NULL
-  for (i in 1:length(article_data$id)) {
-    I1 <- as.character(article_data$ISSN.1[i])
-    I2 <- as.character(article_data$ISSN.2[i])
-    a_data <- article_data[i, ]
+  article_data <- dplyr::mutate(article_data, .article_row = dplyr::row_number())
 
-    if (I1 %in% journal_data$ISSN.1) {
-      j_data <- dplyr::filter(journal_data, ISSN.1 == I1)
-      ja_data <- dplyr::left_join(a_data, j_data, by = "ISSN.1")
-    } else if (I1 %in% journal_data$ISSN.2) {
-      j_data <- dplyr::filter(journal_data, ISSN.2 == I1)
-      ja_data <- dplyr::left_join(a_data, j_data, by = c("ISSN.1" = "ISSN.2"))
-    } else if (I2 %in% journal_data$ISSN.1) {
-      j_data <- dplyr::filter(journal_data, ISSN.1 == I2)
-      ja_data <- dplyr::left_join(a_data, j_data, by = c("ISSN.2" = "ISSN.1"))
-    } else if (I2 %in% journal_data$ISSN.2) {
-      j_data <- dplyr::filter(journal_data, ISSN.2 == I2)
-      ja_data <- dplyr::left_join(a_data, j_data, by = "ISSN.2")
-    } else {
-      stop("ISSN didn not match")
-    }
-    if (is.null(new_df)) {
-      new_df <- ja_data
-    } else {
-      new_df <- dplyr::bind_rows(new_df, ja_data)
-    }
+  article_issn_index <- dplyr::bind_rows(
+    dplyr::transmute(article_data, .article_row, matched_issn = ISSN.1),
+    dplyr::transmute(article_data, .article_row, matched_issn = ISSN.2)
+  ) |>
+    dplyr::filter(!is.na(matched_issn) & nzchar(matched_issn)) |>
+    dplyr::distinct()
+
+  journal_issn_index <- dplyr::bind_rows(
+    dplyr::mutate(journal_data, matched_issn = ISSN.1),
+    dplyr::mutate(journal_data, matched_issn = ISSN.2)
+  ) |>
+    dplyr::filter(!is.na(matched_issn) & nzchar(matched_issn)) |>
+    dplyr::mutate(.journal_match = TRUE) |>
+    dplyr::distinct(matched_issn, .keep_all = TRUE)
+
+  article_journal_matches <- dplyr::left_join(
+    article_issn_index,
+    journal_issn_index,
+    by = "matched_issn"
+  )
+
+  unmatched_articles <- article_journal_matches |>
+    dplyr::group_by(.article_row) |>
+    dplyr::summarise(has_match = any(!is.na(.journal_match)), .groups = "drop") |>
+    dplyr::filter(!has_match)
+
+  if (nrow(unmatched_articles) > 0) {
+    warning(
+      sprintf(
+        "Skipping %s article record(s) with no matching journal ISSN.",
+        nrow(unmatched_articles)
+      ),
+      call. = FALSE
+    )
   }
-  return(new_df)
+
+  matched_journal_data <- article_journal_matches |>
+    dplyr::filter(!is.na(.journal_match)) |>
+    dplyr::distinct(.article_row, .keep_all = TRUE) |>
+    dplyr::select(
+      -.journal_match,
+      -matched_issn,
+      -dplyr::any_of(c("ISSN", "ISSN.1", "ISSN.2"))
+    )
+
+  dplyr::left_join(article_data, matched_journal_data, by = ".article_row") |>
+    dplyr::filter(!(.article_row %in% unmatched_articles$.article_row)) |>
+    dplyr::select(-.article_row)
 }

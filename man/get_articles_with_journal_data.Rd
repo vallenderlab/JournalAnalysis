@@ -20,3 +20,4 @@ FUNCTION_DESCRIPTION
 \examples{
 # ADD_EXAMPLES_HERE
 }
+\keyword{internal}

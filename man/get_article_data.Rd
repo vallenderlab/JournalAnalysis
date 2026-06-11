@@ -4,8 +4,14 @@
 \alias{get_article_data}
 \title{Get Article Data}
 \usage{
-get_article_data(queries, limit = 7500, min_year = 2008,
-  max_year = 2018, min_citations = 5)
+get_article_data(
+  queries,
+  limit = 7500,
+  min_year = NULL,
+  max_year = NULL,
+  min_citations = 5,
+  n_cores = default_worker_count()
+)
 }
 \arguments{
 \item{queries}{Input a Europe PMC query}
@@ -17,6 +23,8 @@ get_article_data(queries, limit = 7500, min_year = 2008,
 \item{max_year}{Maximum publication year}
 
 \item{min_citations}{Minimum number of citations per article}
+
+\item{n_cores}{Number of cores to use across multiple queries.}
 }
 \value{
 A tibble of the article data
