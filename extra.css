@@ -1,0 +1,294 @@
+@import url("https://fonts.googleapis.com/css?family=Quicksand");
+@import url('https://fonts.googleapis.com/css?family=Muli');
+@import url('https://fonts.googleapis.com/css?family=Anonymous+Pro');
+@import url('https://fonts.googleapis.com/css?family=Inconsolata');
+
+body {
+  font-family: "Quicksand", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-weight: 400;
+}
+
+h1, h2, h3, h4, .h1, .h2, .h3, .h4 {
+  font-family: "Quicksand", "Avenir Next", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-weight: 700;
+}
+
+pre, code {
+  font-family: "Inconsolata", Consolas, monospace;
+}
+
+code {
+  font-size: 100%;
+}
+
+:root {
+  --bs-link-color: #3E7BAA;
+  --bs-link-hover-color: #008cba;
+}
+
+a {
+  color: #3E7BAA;
+  text-decoration: none;
+}
+
+a:hover,
+a:focus {
+  color: #008cba;
+  text-decoration: underline;
+}
+
+/* Override BS5 `code a:any-link { color: inherit }` in pkgdown bootstrap */
+.template-reference-index code a,
+.template-reference-index code a:any-link,
+.template-reference-index code a:link,
+.template-reference-topic code a,
+.template-reference-topic code a:any-link,
+.template-reference-topic code a:link,
+.template-article code a,
+.template-article code a:any-link,
+.template-article code a:link,
+pre a,
+pre a:any-link,
+pre a:link {
+  color: #375f84;
+  text-decoration: none;
+}
+
+.template-reference-index code a:hover,
+.template-reference-index code a:focus,
+.template-reference-index code a:any-link:hover,
+.template-reference-topic code a:hover,
+.template-reference-topic code a:focus,
+.template-reference-topic code a:any-link:hover,
+.template-article code a:hover,
+.template-article code a:focus,
+.template-article code a:any-link:hover,
+pre a:hover,
+pre a:focus,
+pre a:any-link:hover {
+  color: #008cba;
+  text-decoration: underline;
+}
+
+.label-danger,
+.badge.bg-danger {
+  background-color: #3E7BAA !important;
+}
+
+.nav-pills > li.active > a,
+.nav-pills > li.active > a:hover,
+.nav-pills > li.active > a:focus,
+.nav-pills .nav-link.active {
+  color: #ffffff;
+  background-color: #3E7BAA;
+}
+
+/* Bootstrap 5 navbar (pkgdown search requires BS5) */
+.navbar.bg-primary,
+.navbar.navbar-dark,
+.navbar[data-bs-theme="dark"] {
+  background-color: #1B243C !important;
+  border-color: #1B243C;
+}
+
+.navbar.bg-primary .navbar-brand,
+.navbar.navbar-dark .navbar-brand,
+.navbar[data-bs-theme="dark"] .navbar-brand,
+.navbar.bg-primary .nav-link,
+.navbar.navbar-dark .nav-link,
+.navbar[data-bs-theme="dark"] .nav-link {
+  color: #ffffff !important;
+  text-decoration: none;
+}
+
+.navbar.bg-primary .navbar-brand:hover,
+.navbar.bg-primary .navbar-brand:focus,
+.navbar.navbar-dark .navbar-brand:hover,
+.navbar.navbar-dark .navbar-brand:focus,
+.navbar[data-bs-theme="dark"] .navbar-brand:hover,
+.navbar[data-bs-theme="dark"] .navbar-brand:focus {
+  color: #ffffff !important;
+  text-decoration: none;
+}
+
+.navbar.bg-primary .nav-link:hover,
+.navbar.bg-primary .nav-link:focus,
+.navbar.navbar-dark .nav-link:hover,
+.navbar.navbar-dark .nav-link:focus,
+.navbar[data-bs-theme="dark"] .nav-link:hover,
+.navbar[data-bs-theme="dark"] .nav-link:focus {
+  color: #ffffff !important;
+  background-color: #273457;
+  text-decoration: none;
+}
+
+.navbar.bg-primary .nav-link.active,
+.navbar.navbar-dark .nav-link.active,
+.navbar[data-bs-theme="dark"] .nav-link.active,
+.navbar.bg-primary .nav-item.show > .nav-link,
+.navbar.navbar-dark .nav-item.show > .nav-link,
+.navbar[data-bs-theme="dark"] .nav-item.show > .nav-link {
+  color: #ffffff !important;
+  background-color: #1B243C;
+}
+
+.navbar.bg-primary .nav-link.active:hover,
+.navbar.bg-primary .nav-link.active:focus,
+.navbar.navbar-dark .nav-link.active:hover,
+.navbar.navbar-dark .nav-link.active:focus,
+.navbar[data-bs-theme="dark"] .nav-link.active:hover,
+.navbar[data-bs-theme="dark"] .nav-link.active:focus {
+  color: #ffffff !important;
+  background-color: #1B243C;
+}
+
+.navbar.bg-primary .dropdown-menu,
+.navbar.navbar-dark .dropdown-menu,
+.navbar[data-bs-theme="dark"] .dropdown-menu {
+  background-color: #1B243C;
+  border-color: #273457;
+}
+
+.navbar.bg-primary .dropdown-item,
+.navbar.navbar-dark .dropdown-item,
+.navbar[data-bs-theme="dark"] .dropdown-item {
+  color: #ffffff;
+}
+
+.navbar.bg-primary .dropdown-item:hover,
+.navbar.bg-primary .dropdown-item:focus,
+.navbar.bg-primary .dropdown-item.active,
+.navbar.navbar-dark .dropdown-item:hover,
+.navbar.navbar-dark .dropdown-item:focus,
+.navbar.navbar-dark .dropdown-item.active,
+.navbar[data-bs-theme="dark"] .dropdown-item:hover,
+.navbar[data-bs-theme="dark"] .dropdown-item:focus,
+.navbar[data-bs-theme="dark"] .dropdown-item.active {
+  color: #ffffff;
+  background-color: #273457;
+}
+
+.navbar .form-control[type="search"] {
+  background-color: #273457;
+  border-color: #273457;
+  color: #ffffff;
+}
+
+.navbar .form-control[type="search"]::placeholder {
+  color: rgba(255, 255, 255, 0.75);
+}
+
+.navbar .form-control[type="search"]:focus {
+  background-color: #273457;
+  border-color: #3E7BAA;
+  color: #ffffff;
+  box-shadow: none;
+}
+
+/* Bootstrap 3 navbar (MicrobiomeR parity) */
+.navbar-default {
+  background-color: #1B243C;
+  border-color: #1B243C;
+  color: #fff;
+}
+
+.navbar-default .navbar-nav > .active > a,
+.navbar-default .navbar-nav > .active > a:hover,
+.navbar-default .navbar-nav > .active > a:focus {
+  color: #ffffff;
+  background-color: #273457;
+}
+
+.navbar-default .navbar-nav > li > a:hover {
+  color: #ffffff;
+  background-color: #273457;
+}
+
+.navbar-default .dropdown-menu {
+  background-color: #1B243C;
+}
+
+.navbar-default .navbar-nav > .open > a {
+  background-color: #1B243C;
+  color: #ffffff;
+}
+
+.navbar-default .navbar-nav > .open > a:hover {
+  background-color: #273457;
+  color: #ffffff;
+}
+
+.navbar-default .navbar-nav > li > a:hover,
+.navbar-default .navbar-nav > li > a:focus {
+  color: #ffffff;
+  background-color: #273457;
+}
+
+.navbar-default .navbar-nav > .active > a,
+.navbar-default .navbar-nav > .active > a:hover,
+.navbar-default .navbar-nav > .active > a:focus {
+  color: #ffffff;
+  background-color: #1B243C;
+}
+
+.navbar-default .navbar-nav > .open > a,
+.navbar-default .navbar-nav > .open > a:focus {
+  background-color: #273457;
+  color: #ffffff;
+}
+
+.navbar-default .navbar-nav .open .dropdown-menu > li > a:hover {
+  color: #ffffff;
+  background-color: #273457;
+}
+
+@media (max-width: 767px) {
+  .navbar-default .navbar-nav .open .dropdown-menu > li > a {
+    color: #ffffff;
+  }
+
+  .navbar-default .navbar-nav .open .dropdown-menu > li > a:hover,
+  .navbar-default .navbar-nav .open .dropdown-menu > li > a:focus {
+    color: #ffffff;
+    background-color: #1B243C;
+  }
+
+  .navbar-default .navbar-nav .open .dropdown-menu > .active > a,
+  .navbar-default .navbar-nav .open .dropdown-menu > .active > a:hover,
+  .navbar-default .navbar-nav .open .dropdown-menu > .active > a:focus {
+    color: #ffffff;
+    background-color: #1B243C;
+  }
+
+  .navbar-default .navbar-nav .open .dropdown-menu > .disabled > a,
+  .navbar-default .navbar-nav .open .dropdown-menu > .disabled > a:hover,
+  .navbar-default .navbar-nav .open .dropdown-menu > .disabled > a:focus {
+    color: #ffffff;
+    background-color: transparent;
+  }
+
+  .navbar.bg-primary .nav-link,
+  .navbar.navbar-dark .nav-link,
+  .navbar[data-bs-theme="dark"] .nav-link,
+  .navbar.bg-primary .dropdown-item,
+  .navbar.navbar-dark .dropdown-item,
+  .navbar[data-bs-theme="dark"] .dropdown-item {
+    color: #ffffff;
+  }
+
+  .navbar.bg-primary .nav-link:hover,
+  .navbar.bg-primary .nav-link:focus,
+  .navbar.navbar-dark .nav-link:hover,
+  .navbar.navbar-dark .nav-link:focus,
+  .navbar[data-bs-theme="dark"] .nav-link:hover,
+  .navbar[data-bs-theme="dark"] .nav-link:focus,
+  .navbar.bg-primary .dropdown-item:hover,
+  .navbar.bg-primary .dropdown-item:focus,
+  .navbar.navbar-dark .dropdown-item:hover,
+  .navbar.navbar-dark .dropdown-item:focus,
+  .navbar[data-bs-theme="dark"] .dropdown-item:hover,
+  .navbar[data-bs-theme="dark"] .dropdown-item:focus {
+    color: #ffffff;
+    background-color: #1B243C;
+  }
+}
