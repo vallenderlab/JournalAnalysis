@@ -1,12 +1,13 @@
 Package: JournalAnalysis
 Title: Explore and Identify Journals to Publish in.
-Version: 0.0.1
+Version: 0.2.0
 Authors@R: c(
-    person("Robert", "Gilmore", email = "rgilmore@umc.edu", role = "cre"),
-    person("Shaurita", "Hutchins", email = "shutchins2@umc.edu", role = "aut"))
+    person("Robert", "Gilmore", email = "robgilmore127@gmail.com", role = c("aut", "cre")),
+    person("Shaurita", "Hutchins", email = "shaurita.d.hutchins@gmail.com", role = "aut"))
 Description: A package for exploring and identifying the best journals in which to publish a paper.
-Depends: R (>= 3.4.3)
-License: MIT
+Depends: 
+    R (>= 3.5)
+License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
 URL: https://github.com/vallenderlab/JournalAnalysis
@@ -14,14 +15,15 @@ BugReports: https://github.com/vallenderlab/JournalAnalysis/issues
 Imports:
     dplyr,
     europepmc,
+    rlang,
     tibble,
-    magrittr,
     PubMedWordcloud,
-    ggplot2,
-    ggthemes,
-    stringr,
-    BiocParallel
-Suggests: knitr,
-    rmarkdown
+    stringr
+Suggests: 
+    knitr,
+    rmarkdown,
+    devtools,
+    testthat (>= 3.0.0)
 VignetteBuilder: knitr
-RoxygenNote: 6.1.0
+RoxygenNote: 7.3.3
+Config/testthat/edition: 3

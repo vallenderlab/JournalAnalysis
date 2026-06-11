@@ -1,0 +1,19 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+type: software
+title: "JournalAnalysis: Explore and Identify Journals to Publish in."
+abstract: >-
+  A package for exploring and identifying the best journals in which to
+  publish a paper.
+authors:
+  - given-names: Robert
+    family-names: Gilmore
+    email: robgilmore127@gmail.com
+  - given-names: Shaurita
+    family-names: Hutchins
+    email: shaurita.d.hutchins@gmail.com
+version: 0.2.0
+date-released: 2026-06-10
+url: https://github.com/vallenderlab/JournalAnalysis
+repository-code: https://github.com/vallenderlab/JournalAnalysis
+license: MIT

@@ -7,7 +7,8 @@
 get_journal_data(data = "incities")
 }
 \arguments{
-\item{data}{A data source included in the package's data folder. Can be scimago or incities.}
+\item{data}{A bundled journal source. Use `incities` (InCites / JCR) or
+`scimago`. The aliases `incites`, `jcr`, and `scimagojr` are also accepted.}
 }
 \value{
 A tibble of the journal data.

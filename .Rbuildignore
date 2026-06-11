@@ -1,4 +1,7 @@
 ^docs$
+^data-raw$
 ^_pkgdown\.yml$
 ^.*\.Rproj$
 ^\.Rproj\.user$
+^LICENSE\.md$
+^data/.*\.csv$
