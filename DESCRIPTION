@@ -20,6 +20,7 @@ Imports:
     PubMedWordcloud,
     stringr
 Suggests: 
+    BiocManager,
     knitr,
     rmarkdown,
     devtools,

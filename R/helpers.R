@@ -181,10 +181,17 @@ install_journalanalysis_packages <- function() {
     if (!requireNamespace("BiocManager", quietly = TRUE)) {
       install.packages("BiocManager", repos = "https://cran.rstudio.com")
     }
-    BiocManager::install(bioconductor_packages_to_install, update = FALSE, ask = FALSE)
+    getNamespace("BiocManager")$install(
+      bioconductor_packages_to_install,
+      update = FALSE,
+      ask = FALSE
+    )
   }
   if (length(github_packages_to_install) > 0) {
-    devtools::install_github(github_packages_to_install)
+    if (!requireNamespace("devtools", quietly = TRUE)) {
+      stop("Install the devtools package to install GitHub dependencies.", call. = FALSE)
+    }
+    getNamespace("devtools")$install_github(github_packages_to_install)
   }
 }
 

@@ -143,8 +143,8 @@ get_articles_with_journal_data <- function(article_data, journal_data) {
   article_data <- dplyr::mutate(article_data, .article_row = dplyr::row_number())
 
   article_issn_index <- dplyr::bind_rows(
-    dplyr::transmute(article_data, .article_row, matched_issn = .data$ISSN.1),
-    dplyr::transmute(article_data, .article_row, matched_issn = .data$ISSN.2)
+    dplyr::transmute(article_data, .article_row = .data$.article_row, matched_issn = .data$ISSN.1),
+    dplyr::transmute(article_data, .article_row = .data$.article_row, matched_issn = .data$ISSN.2)
   ) |>
     dplyr::filter(!is.na(.data$matched_issn) & nzchar(.data$matched_issn)) |>
     dplyr::distinct()
