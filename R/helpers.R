@@ -166,39 +166,29 @@ install_journalanalysis_packages <- function() {
     "stringr",
     "PubMedWordcloud"
   )
-  required_bioconductor_packages <- character()
-  required_github_packages <- c()
-  # Create a list of packages to install.
   cran_packages_to_install <- required_cran_packages[!(required_cran_packages %in% installed.packages()[, 1])]
-  bioconductor_packages_to_install <- required_bioconductor_packages[!(required_bioconductor_packages %in% installed.packages()[, 1])]
-  github_packages_to_install <- required_github_packages[!(gsub(".*/", "", required_github_packages) %in% installed.packages()[, 1])]
-
-  # Install packages from lists.
   if (length(cran_packages_to_install) > 0) {
     install.packages(cran_packages_to_install, repos = "https://cran.rstudio.com")
   }
-  if (length(bioconductor_packages_to_install) > 0) {
-    if (!requireNamespace("BiocManager", quietly = TRUE)) {
-      install.packages("BiocManager", repos = "https://cran.rstudio.com")
-    }
-    getNamespace("BiocManager")$install(
-      bioconductor_packages_to_install,
-      update = FALSE,
-      ask = FALSE
-    )
-  }
-  if (length(github_packages_to_install) > 0) {
-    if (!requireNamespace("devtools", quietly = TRUE)) {
-      stop("Install the devtools package to install GitHub dependencies.", call. = FALSE)
-    }
-    getNamespace("devtools")$install_github(github_packages_to_install)
-  }
+
+  invisible(NULL)
 }
 
 # Provide sample queries ------------------------------------------------------
+#' Example Europe PMC queries for package vignettes.
+#'
+#' @format A character string containing a Europe PMC advanced search query.
+#' @name example_queries
+#' @docType data
+#' @keywords datasets
+NULL
+
+#' @rdname example_queries
 #' @export
 query1 <- "microbiome AND (psychiatry OR brain OR neurons OR neuroscience OR rhesus OR macaque OR addiction) (NOT ecology)"
+#' @rdname example_queries
 #' @export
 query2 <- "microbiome AND environmental stress AND (rhesus OR macaque OR brain) (NOT ecology)"
+#' @rdname example_queries
 #' @export
 query3 <- "microbiome AND (psychiatry OR psychology OR neuroscience) AND (rhesus OR macaque or human or stress or monkey) AND (NOT ecology)"
