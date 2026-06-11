@@ -4,6 +4,7 @@
 #'
 #' @param pubmed_ids A list of pubmed ids
 #' @param plot_name Path to the output word cloud
+#' @importFrom grDevices png dev.off
 #' @export
 get_word_cloud <- function(pubmed_ids, plot_name) {
   abstracts <- PubMedWordcloud::getAbstracts(pubmed_ids)
@@ -19,6 +20,7 @@ get_word_cloud <- function(pubmed_ids, plot_name) {
 #'
 #' @param data The dataframe or tibble
 #' @param filename Name or path of output file without .csv extension
+#' @importFrom utils write.csv
 #' @export
 save_as_csv <- function(data, filename) {
   write.csv(data, file = paste0(filename, ".csv"), row.names = FALSE)
@@ -154,6 +156,7 @@ default_worker_count <- function(reserve_cores = 2L) {
 #'
 #' @description This function helps user to install packages used in this package
 #'
+#' @importFrom utils installed.packages install.packages
 #' @export
 install_journalanalysis_packages <- function() {
   required_cran_packages <- c(

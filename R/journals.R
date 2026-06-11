@@ -15,31 +15,31 @@ get_journal_data <- function(data = "incities") {
     journal_data <- dplyr::mutate(
       journal_data,
       Rank = dplyr::row_number(),
-      Title = journal_name,
-      Full.Journal.Title = journal_name,
+      Title = .data$journal_name,
+      Full.Journal.Title = .data$journal_name,
       ISSN = dplyr::if_else(
-        !is.na(e_issn) & nzchar(e_issn),
-        paste(issn, e_issn, sep = "; "),
-        issn
+        !is.na(.data$e_issn) & nzchar(.data$e_issn),
+        paste(.data$issn, .data$e_issn, sep = "; "),
+        .data$issn
       ),
-      Total.Cites = total_citations,
-      Journal.Impact.Factor = impact_factor_2023,
-      JIF.Quartile = jif_quartile,
-      JCI.2023 = jci_2023,
-      Percent.OA.Gold = percent_oa_gold
+      Total.Cites = .data$total_citations,
+      Journal.Impact.Factor = .data$impact_factor_2023,
+      JIF.Quartile = .data$jif_quartile,
+      JCI.2023 = .data$jci_2023,
+      Percent.OA.Gold = .data$percent_oa_gold
     )
   } else {
     journal_data <- tibble::as_tibble(JournalAnalysis::scimagojr2025)
-    journal_data <- dplyr::mutate(journal_data, ISSN = Issn)
+    journal_data <- dplyr::mutate(journal_data, ISSN = .data$Issn)
     journal_data <- dplyr::mutate(
       journal_data,
-      Title = stringr::str_replace_all(Title, "_", " ")
+      Title = stringr::str_replace_all(.data$Title, "_", " ")
     )
   }
 
   journal_data <- dplyr::mutate(
     journal_data,
-    ISSN = normalize_issn_values(ISSN)
+    ISSN = normalize_issn_values(.data$ISSN)
   )
   journal_data <- dplyr::bind_cols(journal_data, split_normalized_issns(journal_data$ISSN))
 
@@ -65,5 +65,8 @@ issn_to_journal_data <- function(data, issns) {
     data <- dplyr::bind_cols(data, split_normalized_issns(data$ISSN))
   }
 
-  dplyr::filter(data, (ISSN.1 %in% normalized_issns) | (ISSN.2 %in% normalized_issns))
+  dplyr::filter(
+    data,
+    (.data$ISSN.1 %in% normalized_issns) | (.data$ISSN.2 %in% normalized_issns)
+  )
 }

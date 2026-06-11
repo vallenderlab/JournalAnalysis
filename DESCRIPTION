@@ -15,6 +15,7 @@ BugReports: https://github.com/vallenderlab/JournalAnalysis/issues
 Imports:
     dplyr,
     europepmc,
+    rlang,
     tibble,
     PubMedWordcloud,
     stringr
