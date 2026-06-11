@@ -1,10 +1,10 @@
 ---
-title: "JournalAnalysis Vignette"
-author: "Written by Shaurita Hutchins"
+title: "Finding Journals for Your Paper"
+author: "Shaurita Hutchins"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteIndexEntry{Finding Journals for Your Paper}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -16,68 +16,145 @@ knitr::opts_chunk$set(
 )
 ```
 
-## Packages to Load
+JournalAnalysis matches Europe PMC articles to journal-level metrics from
+Scimago or InCites (JCR). This tutorial walks through a typical workflow: define a
+search, retrieve and inspect results, summarize abstracts, rank journals, and
+export a shortlist.
 
-First, you need to load the `JournalAnalysis` package in order to load variables and functions. 
+# Setup
 
-```{r warning=FALSE, message=FALSE}
+Load JournalAnalysis and dplyr for the filtering steps later in the tutorial.
+
+```{r warning = FALSE, message = FALSE}
 library(JournalAnalysis)
 library(dplyr)
 ```
-## Decide on a query and generate pubmed data
 
-Since we are interested in the microbiome in the context of psychiatry, our query is as such.
+# Define your search
 
-```{r warning=FALSE}
-query3 <- "microbiome AND (psychiatry OR psychology OR neuroscience) AND (rhesus OR macaque or human or stress or monkey) AND (NOT ecology)"
-pub_data <- get_publication_data(journal_source = "scimago", queries = query3, limit = 30000, min_citations = 5)
+Europe PMC queries use the same boolean syntax as the website search box. You can
+pass one query or combine several; multiple queries are unioned before
+filtering.
+
+JournalAnalysis also ships example query strings you can adapt:
+
+```{r}
+query3
 ```
 
-The `pub_data` objects includes `$articles`, `$journals`, and `$combined` data.
+For this tutorial we use `query3`, which targets microbiome papers in
+psychiatry, psychology, and neuroscience-related contexts while excluding ecology
+papers.
 
-### View the resulting pubmed ids
-```{r warning=FALSE}
-# View the resulting pubmed ids
+See the [Europe PMC search
+help](https://europepmc.org/Help#whatserachingEPMC) for field names and
+operators.
+
+# Retrieve publication data
+
+`get_publication_data()` is the main entry point. It:
+
+1. Loads journal metrics from `scimago` or `incities` (InCites / JCR)
+2. Queries Europe PMC for each search string
+3. Filters articles by year and citation count
+4. Joins articles to journals by ISSN
+
+Start with a modest `limit` while you refine the query:
+
+```{r}
+pub_data <- get_publication_data(
+  journal_source = "scimago",
+  queries = query3,
+  limit = 200,
+  min_year = 2015,
+  min_citations = 3,
+  n_cores = 1
+)
+
+length(pub_data)
+names(pub_data)
+vapply(pub_data, nrow, integer(1))
+```
+
+The returned list has three elements:
+
+| Element | Description |
+|---------|-------------|
+| `pub_data$articles` | Article metadata from Europe PMC |
+| `pub_data$journals` | Journal metrics for matched ISSNs |
+| `pub_data$combined` | Articles joined to journal metadata |
+
+# Inspect the results
+
+After retrieval, inspect each list element to confirm the query and filters
+behaved as expected.
+
+```{r}
+dplyr::glimpse(pub_data$articles)
+dplyr::glimpse(pub_data$journals)
+dplyr::glimpse(pub_data$combined)
+```
+
+PubMed IDs for the matched articles:
+
+```{r}
 pmids <- pub_data$articles$pmid
-pmids
-```
-### Retrieve abstracts from pmids and create a wordcloud from the pubmed abstracts
-
-```{r warning=FALSE}
-get_word_cloud(pubmed_ids = pmids, plot_name = "microbiome_psych_wordcloud.png")
-
-knitr::include_graphics('./microbiome_psych_wordcloud.png')
+head(pmids)
 ```
 
-## Accessing and analyzing journal data
+# Summarize abstracts
 
-View unique journals based on the articles retrieved with the below command.
+`get_word_cloud()` fetches abstracts for a vector of PubMed IDs and writes a PNG
+word cloud:
 
-```{r warning=FALSE}
-pub_data$journals
+```{r fig.width = 7, fig.height = 7, echo = TRUE, out.width = "70%"}
+wordcloud_path <- "microbiome_psych_wordcloud.png"
+
+get_word_cloud(
+  pubmed_ids = pmids,
+  plot_name = wordcloud_path
+)
+
+knitr::include_graphics(wordcloud_path)
 ```
 
-Now, you can do some further analysis of journals based on `SJR`, which is.
+# Rank journals
 
-```{r warning=FALSE}
-# Decide on categorical words to keep
+Filter the matched journals to subject areas of interest, then keep titles at or
+above the median SJR within that subset.
+
+```{r}
 cats <- "Multidisciplinary|Neuroscience|Psychology|Psychiatry"
-```
 
-Select "best" journals based on median or any other statistical method. It may be valuable to do some clustering although the journals are ranked into quartiles. We chose the median SJR to look at any journals above the median and qualify them as the upper tier.
-
-```{r warning=FALSE}
-# Only keep journals above the median that are journals and include the categories above.
-best_journals <- filter(pub_data$journals, SJR >= median(pub_data$journals$SJR) & grepl(cats, Categories) & Type == "journal")
-```
-
-After filtering the journal data, you can now select specific columns to view and save your tibble as a csv file.
-```{r warning=FALSE}
-# Decide on columns to keep
-best_journals <- best_journals %>% select(Title, Rank, Type, SJR, Country, Categories)
+best_journals <- pub_data$journals |>
+  filter(
+    Type == "journal",
+    SJR >= median(SJR, na.rm = TRUE),
+    grepl(cats, Categories)
+  ) |>
+  select(Title, Rank, Type, SJR, Country, Categories)
 
 best_journals
-
-# Save as a csv file
-save_as_csv(best_journals, filename = "highest_impact_relevant_journals")
 ```
+
+Adjust the category pattern and ranking rule to match your field. For InCites
+data (`journal_source = "incities"`, or aliases `incites` / `jcr`), use columns
+such as `Journal.Impact.Factor` instead of `SJR`.
+
+# Export results
+
+Save the ranked journal table for review outside R.
+
+```{r}
+export_path <- file.path(tempdir(), "highest_impact_relevant_journals")
+save_as_csv(best_journals, filename = export_path)
+list.files(tempdir(), pattern = "highest_impact_relevant_journals", full.names = TRUE)
+```
+
+# Next steps
+
+- Tighten or broaden the Europe PMC query and re-run `get_publication_data()`
+- Compare `scimago` and `incities` (InCites / JCR) journal sources for your topic
+- See `?get_publication_data` and the [function
+  reference](https://vallenderlab.github.io/journalanalysis/reference/index.html)
+  for all parameters
