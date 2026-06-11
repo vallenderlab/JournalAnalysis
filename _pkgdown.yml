@@ -21,6 +21,7 @@ reference:
       - get_article_data
       - get_unique_issns
       - issn_to_article_data
+      - example_queries
 
   - title: Journal metrics
     contents:
