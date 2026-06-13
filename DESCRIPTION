@@ -11,6 +11,7 @@ License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
 URL: https://github.com/vallenderlab/JournalAnalysis
+     https://sdhutchins.r-universe.dev/JournalAnalysis
 BugReports: https://github.com/vallenderlab/JournalAnalysis/issues
 Imports:
     dplyr,
