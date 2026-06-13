@@ -60,7 +60,7 @@ pub_data <- get_publication_data(
   min_citations = 3,
   n_cores = 1
 )
-#> 28861 records found, returning 200
+#> 28942 records found, returning 200
 #> Removed records published before 2015.
 #> Removed records with less than 3 citations.
 #> Removed records with NA values for pmid, doi, and authors.
@@ -101,6 +101,8 @@ dplyr::glimpse(pub_data$articles)
 #> $ title                 <chr> "Age-related severity of nontuberculous mycobact…
 #> $ authorString          <chr> "Napier EG, Doratt BM, Cinco IR, Stuart EV, Gero…
 #> $ journalTitle          <chr> "J Infect", "Alzheimers Dement", "Cells", "Neuro…
+#> $ issue                 <chr> "5", "5", "12", "24", "1", "5", "12", NA, NA, "1…
+#> $ journalVolume         <chr> "91", "21", "14", "113", "30", "17", "10", "19",…
 #> $ pubYear               <int> 2025, 2025, 2025, 2025, 2025, 2025, 2024, 2025, …
 #> $ journalIssn           <chr> "01634453; 15322742;", "15525260; 15525279;", "2…
 #> $ pageInfo              <chr> "106626", "e70273", "908", "4107-4133", "226", "…
@@ -119,8 +121,6 @@ dplyr::glimpse(pub_data$articles)
 #> $ hasTMAccessionNumbers <chr> "Y", "N", "N", "N", "N", "N", "Y", "N", "N", "N"…
 #> $ firstIndexDate        <chr> "2025-10-13", "2025-05-27", "2025-06-26", "2025-…
 #> $ firstPublicationDate  <chr> "2025-10-10", "2025-05-01", "2025-06-16", "2025-…
-#> $ journalVolume         <chr> "91", "21", "14", "113", "30", "17", "10", "19",…
-#> $ issue                 <chr> "5", "5", "12", "24", "1", "5", "12", NA, NA, "1…
 #> $ ISSN.1                <chr> "01634453", "15525260", "20734409", "08966273", …
 #> $ ISSN.2                <chr> "15322742;", "15525279;", "", "10974199;", "2047…
 dplyr::glimpse(pub_data$journals)
@@ -165,6 +165,8 @@ dplyr::glimpse(pub_data$combined)
 #> $ title                     <chr> "Age-related severity of nontuberculous myco…
 #> $ authorString              <chr> "Napier EG, Doratt BM, Cinco IR, Stuart EV, …
 #> $ journalTitle              <chr> "J Infect", "Alzheimers Dement", "Cells", "N…
+#> $ issue                     <chr> "5", "5", "12", "24", "1", "5", "12", NA, NA…
+#> $ journalVolume             <chr> "91", "21", "14", "113", "30", "17", "10", "…
 #> $ pubYear                   <int> 2025, 2025, 2025, 2025, 2025, 2025, 2024, 20…
 #> $ journalIssn               <chr> "01634453; 15322742;", "15525260; 15525279;"…
 #> $ pageInfo                  <chr> "106626", "e70273", "908", "4107-4133", "226…
@@ -183,8 +185,6 @@ dplyr::glimpse(pub_data$combined)
 #> $ hasTMAccessionNumbers     <chr> "Y", "N", "N", "N", "N", "N", "Y", "N", "N",…
 #> $ firstIndexDate            <chr> "2025-10-13", "2025-05-27", "2025-06-26", "2…
 #> $ firstPublicationDate      <chr> "2025-10-10", "2025-05-01", "2025-06-16", "2…
-#> $ journalVolume             <chr> "91", "21", "14", "113", "30", "17", "10", "…
-#> $ issue                     <chr> "5", "5", "12", "24", "1", "5", "12", NA, NA…
 #> $ ISSN.1                    <chr> "01634453", "15525260", "20734409", "0896627…
 #> $ ISSN.2                    <chr> "15322742;", "15525279;", "", "10974199;", "…
 #> $ Rank                      <int> 1215, 349, 1977, 115, 31880, 6244, 2223, 266…
@@ -295,7 +295,7 @@ Save the ranked journal table for review outside R.
 export_path <- file.path(tempdir(), "highest_impact_relevant_journals")
 save_as_csv(best_journals, filename = export_path)
 list.files(tempdir(), pattern = "highest_impact_relevant_journals", full.names = TRUE)
-#> [1] "/tmp/Rtmp2S7EHQ/highest_impact_relevant_journals.csv"
+#> [1] "/tmp/RtmpjIcsBi/highest_impact_relevant_journals.csv"
 ```
 
 ## Next steps

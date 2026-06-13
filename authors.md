@@ -9,7 +9,7 @@
 ## Citation
 
 Source:
-[`DESCRIPTION`](https://github.com/vallenderlab/JournalAnalysis/blob/v0.2.0/DESCRIPTION)
+[`DESCRIPTION`](https://github.com/vallenderlab/JournalAnalysis/blob/main/DESCRIPTION)
 
 Gilmore R, Hutchins S (2026). *JournalAnalysis: Explore and Identify
 Journals to Publish in.*. R package version 0.2.0,
