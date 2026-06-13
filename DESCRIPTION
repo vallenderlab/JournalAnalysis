@@ -1,17 +1,17 @@
 Package: JournalAnalysis
-Title: Explore and Identify Journals to Publish in.
+Title: Explore and Identify Journals to Publish in
 Version: 0.2.0
 Authors@R: c(
     person("Robert", "Gilmore", email = "robgilmore127@gmail.com", role = c("aut", "cre")),
     person("Shaurita", "Hutchins", email = "shaurita.d.hutchins@gmail.com", role = "aut"))
 Description: A package for exploring and identifying the best journals in which to publish a paper.
 Depends: 
-    R (>= 3.5)
+    R (>= 4.0)
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
-URL: https://github.com/vallenderlab/JournalAnalysis
-     https://sdhutchins.r-universe.dev/JournalAnalysis
+URL: https://github.com/vallenderlab/JournalAnalysis,
+    https://sdhutchins.r-universe.dev/JournalAnalysis
 BugReports: https://github.com/vallenderlab/JournalAnalysis/issues
 Imports:
     dplyr,
