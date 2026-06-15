@@ -295,7 +295,7 @@ Save the ranked journal table for review outside R.
 export_path <- file.path(tempdir(), "highest_impact_relevant_journals")
 save_as_csv(best_journals, filename = export_path)
 list.files(tempdir(), pattern = "highest_impact_relevant_journals", full.names = TRUE)
-#> [1] "/tmp/Rtmp8Os9ep/highest_impact_relevant_journals.csv"
+#> [1] "/tmp/RtmpocEeaR/highest_impact_relevant_journals.csv"
 ```
 
 ## Next steps
