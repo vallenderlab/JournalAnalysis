@@ -1,7 +1,7 @@
 # JournalAnalysis
 
 [![R-CMD-check](https://github.com/vallenderlab/JournalAnalysis/actions/workflows/r-cmd-check.yaml/badge.svg)](https://github.com/vallenderlab/JournalAnalysis/actions/workflows/r-cmd-check.yaml)
-[![pkgdown](https://img.shields.io/badge/docs-pkgdown-1f425f.svg)](https://vallenderlab.github.io/journalanalysis/)
+[![pkgdown](https://img.shields.io/badge/docs-pkgdown-1f425f.svg)](https://vallenderlab.github.io/JournalAnalysis/)
 [![r-universe](https://sdhutchins.r-universe.dev/badges/JournalAnalysis)](https://sdhutchins.r-universe.dev/JournalAnalysis)
 [![DOI](https://zenodo.org/badge/133714131.svg)](https://doi.org/10.5281/zenodo.20636463)
 [![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
