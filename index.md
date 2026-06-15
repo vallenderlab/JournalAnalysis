@@ -1,5 +1,12 @@
 # JournalAnalysis
 
+[![R-CMD-check](https://github.com/vallenderlab/JournalAnalysis/actions/workflows/r-cmd-check.yaml/badge.svg)](https://github.com/vallenderlab/JournalAnalysis/actions/workflows/r-cmd-check.yaml)
+[![pkgdown](https://img.shields.io/badge/docs-pkgdown-1f425f.svg)](https://vallenderlab.github.io/journalanalysis/)
+[![r-universe](https://sdhutchins.r-universe.dev/badges/JournalAnalysis)](https://sdhutchins.r-universe.dev/JournalAnalysis)
+[![DOI](https://zenodo.org/badge/133714131.svg)](https://doi.org/10.5281/zenodo.20636463)
+[![License:
+MIT](https://img.shields.io/badge/license-MIT-green.svg)](https://vallenderlab.github.io/journalanalysis/LICENSE)
+
 A repository for exploring and identifying the best journals in which to
 publish a paper.
 
@@ -12,6 +19,19 @@ This package is only available on GitHub.
 install.packages("devtools")
 library(devtools)
 install_github("vallenderlab/JournalAnalysis")
+```
+
+It can also be installed from r-universe.
+
+``` r
+
+install.packages(
+  "JournalAnalysis",
+  repos = c(
+    "https://sdhutchins.r-universe.dev",
+    "https://cloud.r-project.org"
+  )
+)
 ```
 
 ## Usage
